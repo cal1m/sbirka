@@ -12,5 +12,5 @@ window.SUBJECT = {
     ["6", "Kapitola 6 · Rezonátory"],
     ["7", "Kapitola 7 · Lasery"]
   ],
-  files: ["vysvetleni.js", "priklady.js", "vazby.js", "vzorce.js"]
+  files: ["vysvetleni.js", "priklady.js", "vazby.js", "vzorce.js", "tahak.js"]
 };
