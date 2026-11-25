@@ -35,7 +35,7 @@ var MPC = window.MPC.slice().sort(function (a, b) {
 });
 var PROBS = MPC.map(function (m) {
   var nai = NAI_EX.find(function (e) { return e.id === m.num; }) || null;
-  return { id: m.num, m: m, nai: nai, img: SB.dir + m.img, w: m.w, h: m.h, link: nai ? (LINK[m.num] || null) : null, ch: chapOf(m) };
+  return { id: m.num, m: m, nai: nai, img: m.img ? SB.dir + m.img : null, w: m.w, h: m.h, link: nai ? (LINK[m.num] || null) : null, ch: chapOf(m) };
 });
 
 /* ---------- state + persistence ---------- */
@@ -373,17 +373,17 @@ function scrollListToCurrent() {
 /* ---------- problem page ---------- */
 function headHtml(p) {
   var m = p.m;
-  var src = m.src === "RC_EXPLAIN" ? "podklady RC_EXPLAIN, str. " + m.page : "sbírka, str. " + m.page;
+  var src = (m.src ? "podklady " + m.src : "sbírka") + (m.page ? ", str. " + m.page : "");
   return '<header class="head"><div class="bignum">' + p.id + '</div><div class="meta"><span class="chip">' + esc(m.kind) + "</span><span>" + src + '</span></div><div class="tools">' +
     '<button class="btn ' + (st.known[p.id] ? "good" : "") + '" type="button" data-know="1">' + (st.known[p.id] ? "✓ Umím" : "Označit „umím“") + "</button>" +
     "</div><h2>" + fmt(m.title) + "</h2></header>";
 }
 function taskHtml(p) {
   var nai = p.nai, m = p.m;
-  var h = '<section class="task" aria-label="Zadání"><div class="txt">' + (nai ? nai.task : fmt(m.task)) + "</div>";
+  var h = '<section class="task" aria-label="Zadání"><div class="txt">' + (nai && nai.task ? nai.task : fmt(m.task)) + "</div>";
   if (m.given) h += '<ul class="given">' + m.given.map(function (g, i) { return '<li data-hl="g' + i + '">' + fmt(g) + "</li>"; }).join("") + "</ul>";
   var bl = blocksOf(PROBS.indexOf(p));
-  if (nai) h += '<div class="tags">' + nai.pat.map(function (k) { return '<button class="tag" type="button" data-pat="' + k + '">' + esc(PATTERNS[k] ? PATTERNS[k].name : k) + "</button>"; }).join("") + "</div>";
+  if (nai && nai.pat && nai.pat.length) h += '<div class="tags">' + nai.pat.map(function (k) { return '<button class="tag" type="button" data-pat="' + k + '">' + esc(PATTERNS[k] ? PATTERNS[k].name : k) + "</button>"; }).join("") + "</div>";
   if (bl.length) h += '<div class="tags">' + bl.map(function (b) { return '<button class="tag blk" type="button" data-blk="' + b.k + '" title="Otevřít blok na stránce Bloky">▣ ' + esc(b.name) + "</button>"; }).join("") + "</div>";
   return h + "</section>";
 }
@@ -472,7 +472,7 @@ function renderExample() {
   var p = PROBS[st.pi], mode = curMode(p);
   nsClamp(p);
   var ov = overlayItems(p, mode);
-  var o = overlay(p.w, p.h, ov.items, inkMap(p));
+  var o = p.img ? overlay(p.w, p.h, ov.items, inkMap(p)) : { svg: "", used: {} };
   var lg = "";
   for (var k in o.used) { var ts = Array.from(new Set(o.used[k])); if (ts.length) lg += '<span><i style="background:' + (COL[k] || k) + '"></i>' + esc(ts.join(", ")) + "</span>"; }
   if (ov.src) lg = '<span class="src">' + ov.src + "</span>" + lg;
@@ -481,6 +481,8 @@ function renderExample() {
     (p.nai ? '<button type="button" data-mode="learn" aria-pressed="' + (mode === "learn") + '">Pochopit <small>' + p.nai.steps.length + " kroků</small></button>" : "") +
     '<button type="button" data-mode="practice" aria-pressed="' + (mode === "practice") + '">Procvičit <small>' + doneCount(p) + "/" + p.m.steps.length + "</small></button>" +
     '<button type="button" data-mode="exam" aria-pressed="' + (mode === "exam") + '">Zkouška</button></div>';
+  var col = '<div class="col">' + ctl + (mode === "learn" ? learnHtml(p) : mode === "exam" ? examHtml(p) : practiceHtml(p)) + "</div>";
+  if (!p.img) return '<div class="sheet">' + headHtml(p) + taskHtml(p) + '<div class="grid nopic">' + col + "</div></div>"; /* a problem without a picture: steps only */
   return '<div class="sheet">' + headHtml(p) + taskHtml(p) +
     '<div class="grid"><figure class="schem"><div class="paper' + (st.tool ? " inking " + st.tool : "") + (zcur().z > 1 ? " zoomed" : "") + '" style="--ar:' + p.w + "/" + p.h + '"><div class="zoom" style="' + zStyle(zcur()) + '"><img alt="Schéma příkladu ' + p.id + '" src="' + p.img + '" width="' + p.w + '" height="' + p.h + '" draggable="false">' + o.svg + "</div>" + inkBar() +
       '<button type="button" class="zbadge" data-zreset title="Zpět na celé schéma">' + Math.round(zcur().z * 100) + " %</button>" + fsBtn() + "</div>" +
@@ -488,7 +490,7 @@ function renderExample() {
     (p.nai && mode !== "exam" ? '<div class="opts">' +
       (mode === "learn" ? '<label><input type="checkbox" id="allhl" ' + (st.allhl ? "checked " : "") + (st.clean ? "disabled" : "") + "> zvýraznit vše najednou</label>" : "") +
       '<label><input type="checkbox" id="clean" ' + (st.clean ? "checked" : "") + "> Skrýt anotace</label></div>" : "") + "</figure>" +
-    '<div class="col">' + ctl + (mode === "learn" ? learnHtml(p) : mode === "exam" ? examHtml(p) : practiceHtml(p)) + "</div></div></div>";
+    col + "</div></div>";
 }
 
 /* ---------- Vzory and Tahák pages ---------- */
@@ -841,7 +843,7 @@ function zkGrade(p, text) {
   return r;
 }
 (function () { /* self-check on 2.1: R2 100 kΩ, I_R 10 µA, Vref1 0,25 V, Vref2 2,5 V, Vd 4 V, Ii 8,125 µA */
-  var p = PROBS.find(function (x) { return x.id === "2.1"; });
+  var p = SB.id === "nai" && PROBS.find(function (x) { return x.id === "2.1"; }); /* the sample answers are NAI's */
   if (!p) return;
   var r = zkGrade(p, "R2 = 0,6 V\nr_2 = (Vbg-Vbe)/(2Vt ln N)·R1 = 100000\nI_R=1e-5 A; vref1: 250mV, Vref2 = 2,5 V\nVd = 400 V\nVref = 1.25V\nR_1 = 18k\nIi = 8,125·10^-6 A\nhello");
   console.assert(r.good === 5 && r.bad.length === 1 && r.miss === 0 && r.skip.length === 2, "zkGrade 2.1", r);

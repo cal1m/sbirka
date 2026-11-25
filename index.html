@@ -7,23 +7,18 @@
 <meta name="description" content="Sbírky příkladů po krocích: vysvětlení a procvičování">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Public+Sans:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="core/app.css">
-<style>
-  .home { max-width: 640px; margin: 0 auto; padding: 48px 16px; }
-  .home h1 { font-family: var(--font-display); font-size: 40px; margin: 0 0 4px; }
-  .home > p { color: var(--muted); margin: 0 0 24px; }
-  .subj { display: grid; gap: 10px; padding: 0; list-style: none; }
-  .subj a { display: block; padding: 14px 16px; border: 1px solid var(--rule); border-radius: var(--radius-sm); background: var(--sheet); color: var(--ink); text-decoration: none; }
-  .subj a:hover, .subj a:focus-visible { border-color: var(--accent); }
-  .subj b { font-family: var(--font-display); font-size: 24px; display: block; }
-  .subj span { color: var(--muted); font-size: 14px; }
-</style>
+<link rel="stylesheet" href="core/home.css">
 </head>
 <body>
 <main class="home">
   <h1>Sbírka příkladů</h1>
-  <p>Vyber předmět.</p>
+  <p>Příklady po krocích: vysvětlení, procvičování a zkouška. Vyber předmět.</p>
+  <div class="links">
+    <a class="btn primary" href="pridat.html">+ Přidat předmět</a>
+    <a class="btn" href="https://github.com/machmar/sbirka" target="_blank" rel="noopener">GitHub</a>
+  </div>
   <ul class="subj" id="subj"></ul>
 </main>
 <script src="data/subjects.js"></script>

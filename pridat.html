@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Přidat předmět · Sbírka příkladů</title>
+<meta name="description" content="Jak přidat nový předmět do Sbírky příkladů: fork, zadání pro Clauda, pull request">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Public+Sans:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="core/app.css">
+<link rel="stylesheet" href="core/home.css">
+</head>
+<body>
+<main class="home">
+  <p class="back"><a href="./">← Sbírka příkladů</a></p>
+  <h1>Přidat předmět</h1>
+  <p class="lead">Aplikace je pro všechny předměty stejná, nový předmět jsou jen data: příklady po krocích s výsledky, nápovědou a řešením, případně vysvětlení se zvýrazněním v obrázku. Nejrychleji je vytvoří Claude z tvých podkladů (sbírka s řešením, skripta).</p>
+  <p class="lead">Podívej se, jak vypadá <a href="sablona/">ukázkový předmět</a> se dvěma příklady.</p>
+
+  <ol class="steps">
+    <li>
+      <h2>Fork repozitáře</h2>
+      <p>Vytvoří tvou kopii na GitHubu (je potřeba účet). Stačí kliknout a potvrdit.</p>
+      <p><a class="btn primary" href="https://github.com/machmar/sbirka/fork" target="_blank" rel="noopener">Vytvořit fork na GitHubu</a></p>
+    </li>
+    <li>
+      <h2>Zadání pro Clauda</h2>
+      <p>Vyplň, zkopíruj a vlož do <a href="https://claude.com/claude-code" target="_blank" rel="noopener">Claude Code</a> (umí sám naklonovat, vyzkoušet a otevřít pull request). Přilož podklady k předmětu (PDF, fotky, text).</p>
+      <div class="fields">
+        <label>Tvé jméno na GitHubu<input id="u" placeholder="tvuj-github" autocomplete="off" spellcheck="false"></label>
+        <label>Zkratka předmětu (id)<input id="id" placeholder="ele" autocomplete="off" spellcheck="false"></label>
+        <label>Název předmětu<input id="n" placeholder="Elektronika 1" autocomplete="off"></label>
+      </div>
+      <p class="hint" id="idhint" hidden>Zkratka: jen malá písmena, číslice a pomlčka, třeba „ele“ nebo „mat1“.</p>
+      <textarea id="prompt" readonly rows="16" aria-label="Zadání pro Clauda"></textarea>
+      <p><button class="btn primary" type="button" id="copy">Zkopírovat zadání</button> <span class="msg" id="copied" role="status"></span></p>
+    </li>
+    <li>
+      <h2>Pull request</h2>
+      <p>Claude ho otevře sám (bod 5 v zadání). Po sloučení je předmět na <code>machmar.github.io/sbirka/<span class="pid">zkratka</span>/</code> a v seznamu na úvodní stránce.</p>
+    </li>
+  </ol>
+
+  <section class="more">
+    <h2>Bez Clauda nebo bez GitHubu</h2>
+    <ul>
+      <li>Ručně: zkopíruj složku <code>data/sablona/</code> a postupuj podle <a href="https://github.com/machmar/sbirka/blob/main/PRIDAT-PREDMET.md" target="_blank" rel="noopener">PRIDAT-PREDMET.md</a> (přesný popis všech polí).</li>
+      <li>Nemáš GitHub nebo čas? <a href="https://github.com/machmar/sbirka/issues/new?title=%5BNov%C3%BD%20p%C5%99edm%C4%9Bt%5D%20&amp;body=P%C5%99edm%C4%9Bt%3A%20%0AOdkaz%20na%20podklady%20(sb%C3%ADrka%20s%20%C5%99e%C5%A1en%C3%ADm)%3A%20%0A" target="_blank" rel="noopener">Navrhni předmět</a> a přidej odkaz na podklady.</li>
+    </ul>
+  </section>
+</main>
+<script>
+(function () {
+  var u = document.getElementById("u"), id = document.getElementById("id"), n = document.getElementById("n");
+  var out = document.getElementById("prompt"), hint = document.getElementById("idhint");
+  function v(el, ph) { return el.value.trim() || ph; }
+  function upd() {
+    var U = v(u, "<tvuj-github>"), I = v(id, "<zkratka>"), N = v(n, "<název předmětu>");
+    hint.hidden = !id.value.trim() || /^[a-z0-9-]{1,30}$/.test(id.value.trim());
+    [].forEach.call(document.querySelectorAll(".pid"), function (s) { s.textContent = I; });
+    out.value =
+      "Chci přidat nový předmět do studijní aplikace „Sbírka příkladů“ (https://github.com/machmar/sbirka).\n" +
+      "Předmět: " + N + ", zkratka (id): " + I + "\n" +
+      "Můj fork: https://github.com/" + U + "/sbirka\n\n" +
+      "1. Naklonuj můj fork a přečti si PRIDAT-PREDMET.md a ukázku data/sablona/ (přesný formát dat). Neměň nic v core/ ani v datech jiných předmětů.\n" +
+      "2. Z podkladů, které přikládám, vytvoř předmět „" + I + "“: složku data/" + I + "/ (subject.js, příklady a kde to dává smysl i vysvětlení se zvýrazněním v obrázku, vazby a vzorce), stránku " + I + "/index.html a záznam v data/subjects.js.\n" +
+      "3. Každý příklad rozděl na kroky: jeden výpočet = jeden krok s číselným výsledkem v jednotce, nápovědou a řešením v TeXu. Výsledky přepočítej, ať sedí. Obrázky (schémata, grafy) ulož do data/" + I + "/img/ a zapiš jejich rozměry v px. Kapitoly převezmi z podkladů.\n" +
+      "4. Vyzkoušej to: v kořeni repozitáře spusť python -m http.server 8000, otevři http://localhost:8000/" + I + "/ a zkontroluj, že se zobrazí všechny příklady, kontrola výsledků přijme správné hodnoty a v konzoli prohlížeče nejsou chyby.\n" +
+      "5. Commitni změny do nové větve, pushni ji do mého forku a otevři pull request do machmar/sbirka (do popisu napiš, z jakých podkladů data jsou).\n\n" +
+      "Pokud v podkladech něco chybí nebo si nejsi jistý výsledkem, zeptej se mě, než to vymyslíš.";
+  }
+  [u, id, n].forEach(function (el) { el.addEventListener("input", upd); });
+  document.getElementById("copy").addEventListener("click", function () {
+    var m = document.getElementById("copied");
+    function done() { m.textContent = "Zkopírováno"; setTimeout(function () { m.textContent = ""; }, 2000); }
+    if (navigator.clipboard) navigator.clipboard.writeText(out.value).then(done, function () { out.select(); document.execCommand("copy"); done(); });
+    else { out.select(); document.execCommand("copy"); done(); }
+  });
+  upd();
+})();
+</script>
+</body>
+</html>

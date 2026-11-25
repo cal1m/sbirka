@@ -1,0 +1,32 @@
+/* start page and "Přidat předmět" (on top of app.css, which brings the colours, fonts and .btn) */
+body { background: var(--paper); color: var(--ink); font-family: var(--font-body); }
+.home { max-width: 680px; margin: 0 auto; padding: 48px 16px 64px; line-height: 1.55; }
+.home h1 { font-family: var(--font-display); font-size: 40px; line-height: 1.1; margin: 0 0 6px; }
+.home h2 { font-family: var(--font-display); font-size: 22px; margin: 0 0 4px; }
+.home a:not(.btn) { color: var(--accent); }
+.home code { font-family: var(--font-mono); font-size: .9em; }
+.home .lead, .home > p { color: var(--muted); margin: 0 0 14px; }
+.home .back { margin: 0 0 18px; font-size: 14px; }
+.home .back a { text-decoration: none; }
+a.btn { display: inline-flex; align-items: center; gap: 6px; text-decoration: none; }
+.links { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 28px; }
+
+.subj { display: grid; gap: 10px; padding: 0; margin: 0; list-style: none; }
+.home .subj a { display: block; padding: 14px 16px; border: 1px solid var(--rule); border-radius: var(--radius-sm); background: var(--sheet); color: var(--ink); text-decoration: none; }
+.home .subj a:hover, .home .subj a:focus-visible { border-color: var(--accent); }
+.subj b { font-family: var(--font-display); font-size: 24px; display: block; }
+.subj span { color: var(--muted); font-size: 14px; }
+
+.steps { padding: 0; margin: 24px 0; list-style: none; counter-reset: s; display: grid; gap: 14px; }
+.steps > li { position: relative; padding: 16px 16px 14px 56px; border: 1px solid var(--rule); border-radius: var(--radius-sm); background: var(--sheet); counter-increment: s; }
+.steps > li::before { content: counter(s); position: absolute; left: 16px; top: 14px; width: 28px; height: 28px; display: grid; place-items: center; border-radius: 50%; background: var(--accent); color: var(--sheet); font: 700 15px/1 var(--font-body); }
+.steps p { margin: 0 0 10px; }
+.fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 8px; margin: 0 0 10px; }
+.fields label { display: grid; gap: 3px; font-size: 13px; color: var(--muted); }
+.fields input { min-width: 0; padding: 7px 9px; border: 1px solid var(--rule); border-radius: 6px; background: var(--paper); color: var(--ink); font: 15px var(--font-body); }
+.fields input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+.home .hint { color: var(--bad, #c0392b); font-size: 13px; }
+#prompt { width: 100%; box-sizing: border-box; padding: 10px; border: 1px solid var(--rule); border-radius: 6px; background: var(--paper); color: var(--ink); font: 12.5px/1.5 var(--font-mono); resize: vertical; }
+.more { margin-top: 28px; }
+.more ul { padding-left: 20px; margin: 6px 0 0; }
+.more li { margin: 4px 0; }

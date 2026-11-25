@@ -17,20 +17,19 @@ Každý předmět má:
 
 ```
 index.html              úvodní stránka se seznamem předmětů (z data/subjects.js)
+pridat.html             „Přidat předmět“: fork, zadání pro Clauda, pull request
+PRIDAT-PREDMET.md       přesný popis formátu dat předmětu
 core/boot.js            společná stránka: vypíše rozvržení a načte data předmětu a app.js
-core/app.js, app.css    aplikace (bez build kroku)
+core/app.js, app.css    aplikace (bez build kroku); home.css pro úvodní stránky
 data/subjects.js        seznam předmětů na úvodní stránce
 data/<předmět>/         všechno, co patří předmětu: subject.js, datové soubory, img/, tools/
+data/sablona/           ukázkový předmět ke zkopírování (běží na /sbirka/sablona/)
 <předmět>/index.html    jen adresa /sbirka/<předmět>/: jeden řádek s <script src="../core/boot.js" data-subject="…">
 ```
 
 ### Nový předmět
 
-1. Vytvoř `data/xyz/subject.js` (název, kapitoly, seznam datových souborů, vzor je `data/nai/subject.js`) a k němu datové soubory a obrázky.
-2. Zkopíruj `nai/index.html` do `xyz/index.html` a změň `data-subject="nai"` na `"xyz"`.
-3. Přidej předmět do `data/subjects.js`.
-
-Datové soubory nastavují tyto proměnné (formát viz `data/nai/`): `MPC` (příklady k procvičování, povinné), `NAI_EX` (vysvětlení pro Pochopit), `LINK` (vazba kroků procvičování na kroky vysvětlení), `PATTERNS` a `TAHAK` (Vzory a tahák), `BLOKY`, `VZORCE` (panel Vzorce a konstanty). Cesty k obrázkům v datech jsou vůči `data/<předmět>/`.
+Návod je na stránce <https://machmar.github.io/sbirka/pridat.html>, formát dat v [PRIDAT-PREDMET.md](PRIDAT-PREDMET.md). Ve zkratce: zkopíruj `data/sablona/` a `sablona/index.html`, přepiš data a přidej předmět do `data/subjects.js`.
 
 ## Ukládání postupu a místnosti
 

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 360" width="300" height="360" font-family="Arial, sans-serif" font-size="16">
+  <rect width="300" height="360" fill="#fff"/>
+  <g fill="none" stroke="#111" stroke-width="2.5">
+    <path d="M40 40 H150 V70"/>
+    <rect x="135" y="70" width="30" height="80"/>
+    <path d="M150 150 V210 M150 180 H240"/>
+    <rect x="135" y="210" width="30" height="80"/>
+    <path d="M150 290 V320 M125 320 H175 M135 330 H165 M145 340 H155"/>
+  </g>
+  <circle cx="40" cy="40" r="5" fill="#111"/>
+  <circle cx="150" cy="180" r="5" fill="#111"/>
+  <circle cx="240" cy="180" r="5" fill="#111"/>
+  <text x="30" y="28">V_in = 10 V</text>
+  <text x="175" y="115">R1 6k</text>
+  <text x="175" y="255">R2 4k</text>
+  <text x="222" y="168">V_out</text>
+</svg>
